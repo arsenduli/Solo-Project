@@ -18,15 +18,7 @@ public class ProductServices {
     @Autowired
     private ProductRepo productRepo;
 
-
-    public void uploadPic(String name, Double price, String description, String url, Admin adminProduct){
-        Product newProduct = new Product(name,price,description,url,adminProduct);
-        this.productRepo.save(newProduct);
-    }
-    public void editPic(String url, Admin adminProduct){
-        Product newProduct = new Product(url,adminProduct);
-        this.productRepo.save(newProduct);
-    }
+    
 
     public   List<Product> getByadminAndCate(Admin admin , Categories categories){
         return productRepo.findByAdminProductAndCategories(admin , categories);

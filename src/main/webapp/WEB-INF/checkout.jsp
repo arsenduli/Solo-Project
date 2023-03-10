@@ -264,21 +264,22 @@
 							<div class="section-title">
 								<h3 class="title">Billing address</h3>
 							</div>
-
+							<%--@elvariable id="order" type="com"--%>
+							<form:form action="/makeOrder" method="post" modelAttribute="order">
 							<div class="form-group">
-								<input class="input" type="text" name="address" placeholder="Address">
+								<form:input class="input" type="text" path="address" placeholder="Address"/>
 							</div>
 							<div class="form-group">
-								<input class="input" type="text" name="city" placeholder="City">
+								<form:input class="input" type="text" path="city" placeholder="City"/>
 							</div>
 							<div class="form-group">
-								<input class="input" type="text" name="country" placeholder="Country">
+								<form:input class="input" type="text" path="country" placeholder="Country"/>
 							</div>
 							<div class="form-group">
-								<input class="input" type="text" name="zip-code" placeholder="ZIP Code">
+								<form:input class="input" type="text" path="zipCode" placeholder="ZIP Code"/>
 							</div>
 							<div class="form-group">
-								<input class="input" type="tel" name="tel" placeholder="Telephone">
+								<form:input class="input" type="tel" path="tel" placeholder="Telephone"/>
 							</div>
 							<div class="form-group">
 
@@ -291,6 +292,7 @@
 						<div class="order-notes">
 							<textarea class="input" placeholder="Order Notes"></textarea>
 						</div>
+
 						<!-- /Order notes -->
 					</div>
 
@@ -322,47 +324,8 @@
 								<div><strong class="order-total">$${idUsr.getTotal()}</strong></div>
 							</div>
 						</div>
-
-						<div class="payment-method">
-							<div class="input-radio">
-								<input type="radio" name="payment" id="payment-1">
-								<label for="payment-1">
-									<span></span>
-									Direct Bank Transfer
-								</label>
-								<div class="caption">
-									<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-								</div>
-							</div>
-							<div class="input-radio">
-								<input type="radio" name="payment" id="payment-2">
-								<label for="payment-2">
-									<span></span>
-									Cheque Payment
-								</label>
-								<div class="caption">
-									<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-								</div>
-							</div>
-							<div class="input-radio">
-								<input type="radio" name="payment" id="payment-3">
-								<label for="payment-3">
-									<span></span>
-									Paypal System
-								</label>
-								<div class="caption">
-									<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-								</div>
-							</div>
-						</div>
-						<div class="input-checkbox">
-							<input type="checkbox" id="terms">
-							<label for="terms">
-								<span></span>
-								I've read and accept the <a href="#">terms & conditions</a>
-							</label>
-						</div>
-						<a href="/checkout/${idUsr.id}" class="primary-btn order-submit">Place order</a>
+						<button class="primary-btn order-submit">Place order</button>
+						</form:form>
 					</div>
 					<!-- /Order Details -->
 				</div>

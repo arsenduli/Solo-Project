@@ -29,16 +29,15 @@
     <!-- Beginning of Container -->
     <div
             class="d-flex flex-column justify-content-center align-items-center gap-2">
-        <h1> Create Product:</h1>
+        <h1> Edit Product:</h1>
         <a href="/admin/dashboard">Go Back</a>
     </div>
     <div
             class="d-flex justify-content-center gap-5 mt-3">
         <div class = "bg-light p-5">
             <%--@elvariable id="editProduct" type="com"--%>
-            <%--@elvariable id="createProduct" type="com"--%>
-            <form:form class="form d-flex flex-column gap-3" action="/products/new"
-                       method="post" modelAttribute="createProduct" enctype="multipart/form-data">
+            <form:form class="form d-flex flex-column gap-3" action="/products/edit/${createProduct.id}"
+                  method="put" modelAttribute="editProduct" enctype="multipart/form-data">
                 <div
                         class=" d-flex flex-column justify-content-center align-items-center gap-2">
                     <form:label path="name">Product Name: </form:label>

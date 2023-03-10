@@ -180,7 +180,8 @@
                                                 <i class="fa fa-star"></i>
                                             </div>
                                                 <div class="product-btns">
-                                                    <a href="/products/${productsVar.id}/delete" class="quick-view"><span class="tooltipp">Delete</span></a>
+                                                    <a href="/products/${productsVar.id}/delete" class="quick-view"><span class="tooltipp">Delete ||</span></a>
+                                                    <a href="/products/edit/${productsVar.id}" class="quick-view"><span class="tooltipp">Edit</span></a>
                                                 </div>
                                         </div>
 

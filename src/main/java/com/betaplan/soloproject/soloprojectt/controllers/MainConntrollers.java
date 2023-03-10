@@ -222,26 +222,40 @@ public class MainConntrollers {
     }
 
 
-    @GetMapping("/checkout/{id}")
-    public String checkout(@PathVariable("id") Long id,@ModelAttribute("order") Order order, Model model , HttpSession session){
+    @GetMapping("/checkout")
+    public String checkout(@ModelAttribute("order") Order order, Model model , HttpSession session){
         Long userIds = (Long) session.getAttribute("userId");
         User user = userServices.findUserId(userIds);
-        Product product = productServices.getByIdProduct(id);
         List<Product> pro = user.getAddCart();
-        model.addAttribute("products" , product);
         if (userIds != null) {
             model.addAttribute("idUsr", user);
             model.addAttribute("orderUser", orderServices.getOrderByUser(user));
             model.addAttribute("userCart", userServices.findUserId(userIds).getAddCart().size());
             model.addAttribute("userWishlist", userServices.findUserId(userIds).getAddWishlist().size());
         }
-        order.setUserOrder(user);
-        order.setProductsInOrder(pro);
-        orderServices.createOrder(order);
         return "checkout";
     }
 
 
+    // not compleate
+    @PostMapping("/makeOrder")
+    public String createOrder(@Valid @ModelAttribute("order") Order order,BindingResult result,  Model model, HttpSession session){
+        Long userIds = (Long) session.getAttribute("userId");
+        User user = userServices.findUserId(userIds);
+        List<Product> pro = user.getAddCart();
+        if (result.hasErrors()){
+            model.addAttribute("idUsr", user);
+            model.addAttribute("orderUser", orderServices.getOrderByUser(user));
+            model.addAttribute("userCart", userServices.findUserId(userIds).getAddCart().size());
+            model.addAttribute("userWishlist", userServices.findUserId(userIds).getAddWishlist().size());
+            return "checkout";
+        }
+        order.setUserOrder(user);
+        orderServices.createOrder(order);
+        return "redirect:/";
+
+
+    }
 
 
 
@@ -333,44 +347,81 @@ public class MainConntrollers {
         private static String UPLOADED_FOLDER = "src/main/resources/static/img/";
 
     @GetMapping("/products/new")
-    public String newProduc(Model model , HttpSession session){
+    public String newProduct(@ModelAttribute("createProduct") Product createProduct,Model model , HttpSession session){
         if (session.getAttribute("adminId") == null) {
             return "redirect:/";
         }
-
         return "newProduct";
     }
     @PostMapping("/products/new")
-    public String addProduct(@RequestParam("pic")MultipartFile file, @RequestParam("name")String name, @RequestParam("description")String description, @RequestParam("price") Double price, HttpSession session , RedirectAttributes redirectAttributes){
+    public String createProduct(@Valid @ModelAttribute("createProduct") Product createProduct,BindingResult result ,@RequestParam("pic") MultipartFile file, HttpSession session , RedirectAttributes redirectAttributes){
         Long adminIds = (Long) session.getAttribute("adminId");
         Admin adminId = adminServices.findAdminId(adminIds);
-        if (price.equals(null)){
-            redirectAttributes.addFlashAttribute("massage", "Price   cannot be empty!!!");
+        if (result.hasErrors()){
             return "newProduct";
         }
         if (file.isEmpty()){
             redirectAttributes.addFlashAttribute("massage", "Field cannot be empty!!!");
             return "newProduct";
         }
-        if (name.isEmpty()){
-            redirectAttributes.addFlashAttribute("massage", "Field cannot be empty!!!");
-            return "newProduct";
-        }
-        if (description.isEmpty()){
-            redirectAttributes.addFlashAttribute("massage", "Field cannot be empty!!!");
-            return "newProduct";
-        }
+
         try{
             byte[] bytes =file.getBytes();
             Path path = Paths.get(UPLOADED_FOLDER + file.getOriginalFilename());
             Files.write(path, bytes);
             String url = "/img/" + file.getOriginalFilename();
-            productServices.uploadPic(name,price,description,url,adminId);
+            createProduct.setAdminProduct(adminId);
+            createProduct.setUrl(url);
+            productServices.createProduct(createProduct);
         } catch (IOException e){
             e.printStackTrace();
         }
+
         return "redirect:/admin/dashboard";
     }
+
+
+    @GetMapping("/products/edit/{id}")
+    public String editProduct(@PathVariable("id")Long id, @ModelAttribute("editProduct") Product editProduct,Model model , HttpSession session){
+        if (session.getAttribute("adminId") == null) {
+            return "redirect:/";
+        }
+        model.addAttribute("createProduct" , productServices.getByIdProduct(id));
+        return "editProduct";
+    }
+
+
+    @PutMapping("/products/edit/{id}")
+    public String editProduct(@PathVariable("id") Long id,@Valid @ModelAttribute("editProduct") Product editProduct,BindingResult result ,@RequestParam("pic") MultipartFile file, HttpSession session , RedirectAttributes redirectAttributes){
+        Long adminIds = (Long) session.getAttribute("adminId");
+        Admin adminId = adminServices.findAdminId(adminIds);
+        Product product = productServices.getByIdProduct(id);
+        if (result.hasErrors()){
+            return "editProduct";
+        }
+        if (file.isEmpty()){
+            redirectAttributes.addFlashAttribute("massage", "Field cannot be empty!!!");
+            return "editProduct";
+        }
+
+        try{
+            byte[] bytes =file.getBytes();
+            Path path = Paths.get(UPLOADED_FOLDER + file.getOriginalFilename());
+            Files.write(path, bytes);
+            String url = "/img/" + file.getOriginalFilename();
+            editProduct.setAdminProduct(adminId);
+            editProduct.setUrl(url);
+            productServices.createProduct(editProduct);
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+
+        return "redirect:/admin/dashboard";
+    }
+
+
+
+
 
     @GetMapping("/category/new")
     public String newCategory(Model model, HttpSession session){

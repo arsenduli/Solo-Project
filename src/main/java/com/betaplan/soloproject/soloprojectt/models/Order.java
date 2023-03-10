@@ -1,6 +1,7 @@
 package com.betaplan.soloproject.soloprojectt.models;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Entity
@@ -11,19 +12,22 @@ public class Order {
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
     private  Long id;
 
-
+    @NotNull
     private  String address;
+    @NotNull
     private String city;
+    @NotNull
     private String country;
+    @NotNull
     private Integer zipCode;
+    @NotNull
     private Integer tel;
-    private String paymentMeth;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User userOrder;
 
-    @OneToMany(mappedBy = "orderProduct" , fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "orderProduct" , cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private List<Product> productsInOrder;
 
     public Order() {
@@ -77,13 +81,6 @@ public class Order {
         this.tel = tel;
     }
 
-    public String getPaymentMeth() {
-        return paymentMeth;
-    }
-
-    public void setPaymentMeth(String paymentMeth) {
-        this.paymentMeth = paymentMeth;
-    }
 
     public User getUserOrder() {
         return userOrder;
